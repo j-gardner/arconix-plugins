@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Arconix Plugins
  * Plugin URI: http://arconixpc.com/
- * Description: Custom Plugin for consistently displaying the developed plugins
+ * Description: Custom Plugin for consistently creating and displaying user-developed plugins on a website
  *
  * Version: 0.3
  *
