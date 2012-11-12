@@ -68,7 +68,7 @@ class Arconix_Plugins {
      * Runs on plugin activation
      * 
      * @since 0.1
-     * @version 0.2
+     * @version 0.3
      */
     function activation() {        
        flush_rewrite_rules();
