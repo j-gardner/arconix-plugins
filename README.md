@@ -1,4 +1,0 @@
-arconix-plugins
-===============
-
-WordPress plugin
