@@ -5,10 +5,10 @@
  * @global type $post
  * @global type $post_ID
  * @param type $messages
- * @return type array $messages * 
+ * @return type array $messages *
  * @since 0.1
  */
-function updated_messages( $messages ) {
+function acpl_updated_messages( $messages ) {
     global $post, $post_ID;
 
     $messages['plugins'] = array(
@@ -38,8 +38,7 @@ function updated_messages( $messages ) {
  * @return string $columns
  * @since 0.1
  */
-function columns_filter( $columns ) {
-
+function acpl_columns_filter( $columns ) {
     $columns = array(
         "cb" => "<input type=\"checkbox\" />",
         "title" => "Plugin Name",
@@ -57,8 +56,7 @@ function columns_filter( $columns ) {
  * @param type $column
  * @since 0.1
  */
-function columns_data( $column ) {
-
+function acpl_columns_data( $column ) {
     global $post;
 
     switch( $column ) {
@@ -78,8 +76,8 @@ function columns_data( $column ) {
  * @link http://bajada.net/2010/06/08/how-to-add-custom-post-types-and-taxonomies-to-the-wordpress-right-now-dashboard-widget
  * @since 0.1
  */
-function right_now() {    
-    
+function acpl_right_now() {
+
     /* Define the post type text here, allowing us to quickly re-use this code in other projects */
     $ac_pt = 'plugins'; // must be the registered post type
     $ac_pt_s = 'Plugin';
@@ -102,7 +100,6 @@ function right_now() {
     $text = _n( $ac_pt_s, $ac_pt_p, intval( $num_posts->publish ) );
 
     if( current_user_can( 'edit_posts' ) ) {
-
         $num = "<a href='edit.php?post_type=$ac_pt'>$num</a>";
         $text = "<a href='edit.php?post_type=$ac_pt'>$text</a>";
     }
@@ -116,10 +113,8 @@ function right_now() {
         $text = _n( $ac_pt_sp, $ac_pt_pp, intval( $num_posts->pending ) );
 
         if( current_user_can( 'edit_posts' ) ) {
-
             $num = "<a href='edit.php?post_status=pending&post_type='$ac_pt'>$num</a>";
             $text = "<a href='edit.php?post_status=pending&post_type=$ac_pt'>$text</a>";
-
         }
 
         echo '<td class="first b b-' . $ac_pt . '">' . $num . '</td>';
