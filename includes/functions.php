@@ -50,17 +50,16 @@ function acpl_content_filter( $content ) {
         $custom = get_post_custom();
 
         /* Extract the values of the various meta boxes into variables */
-        isset( $custom["_acpl_example"][0] ) ? $example = $custom["_acpl_example"][0] : $example = "";
+        isset( $custom["_acpl_example"][0] ) ? $demo = $custom["_acpl_example"][0] : $demo = "";
         isset( $custom["_acpl_download"][0] ) ? $download = $custom["_acpl_download"][0] : $download = "";
         isset( $custom["_acpl_docs"][0] ) ? $docs = $custom["_acpl_docs"][0] : $docs = "";
         isset( $custom["_acpl_help"][0] ) ? $help = $custom["_acpl_help"][0] : $help = "";
         isset( $custom["_acpl_dev"][0] ) ? $dev = $custom["_acpl_dev"][0] : $dev = "";
         isset( $custom["_acpl_source"][0] ) ? $source = $custom["_acpl_source"][0] : $source = "";
 
-        $output .= '<h3 class="arconix-plugin-title">Example</h3>';
-        $output .= '<p class="arconix-plugin-content">' . do_shortcode( $example ) . '</p>';
         $output .= '<h3 class="arconix-plugin-title">Links</h3>';
         $output .= '<ul class="arconix-plugin-links">';
+        $output .= '<li class="arconix-plugin-demo"><a href="' . $demo . '">Demo</a></li>';
         $output .= '<li class="arconix-plugin-download"><a href="' . $download . '">Download</a></li>';
         $output .= '<li class="arconix-plugin-docs"><a href="' . $docs . '">Documentation</a></li>';
         $output .= '<li class="arconix-plugin-help"><a href="' . $help . '">Support</a></li>';
