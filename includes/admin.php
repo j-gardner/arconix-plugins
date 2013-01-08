@@ -60,7 +60,6 @@ function acpl_columns_data( $column ) {
     global $post;
 
     switch( $column ) {
-
         case "plugin_desc":
             the_excerpt();
             break;
@@ -121,4 +120,20 @@ function acpl_right_now() {
         echo '<td class="t '. $ac_pt . '">' . $text . '</td>';
         echo '</tr>';
     }
+}
+
+/**
+ * Customize the "Enter title here" text
+ *
+ * @param string $title
+ * @return $title
+ * @since 0.3
+ */
+function acpl_custom_title_text( $title ) {
+    $screen = get_current_screen();
+
+    if( 'plugins' == $screen->post_type ) {
+        $title = __( 'Enter the plugin name', 'acpl' );
+    }
+    return $title;
 }

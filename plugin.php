@@ -58,6 +58,7 @@ class Arconix_Plugins {
         add_filter( 'manage_edit-plugins_columns', 'acpl_columns_filter' );
         add_filter( 'cmb_meta_boxes', 'acpl_create_meta_box' );
         add_filter( 'post_updated_messages', 'acpl_updated_messages' );
+        add_filter( 'enter_title_here', 'acpl_custom_title_text' );
         add_filter( 'the_content', 'acpl_content_filter' );
 
 
