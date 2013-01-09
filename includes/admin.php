@@ -76,7 +76,6 @@ function acpl_columns_data( $column ) {
  * @since 0.1
  */
 function acpl_right_now() {
-
     /* Define the post type text here, allowing us to quickly re-use this code in other projects */
     $ac_pt = 'plugins'; // must be the registered post type
     $ac_pt_s = 'Plugin';
@@ -85,7 +84,6 @@ function acpl_right_now() {
     $ac_pt_p = ucfirst( $ac_pt );
     $ac_pt_pp = $ac_pt_p . ' Pending';
     $ac_pt_sp = $ac_pt_s . ' Pending';
-
 
     $args = array(
         'public' => true,

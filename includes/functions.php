@@ -65,7 +65,6 @@ function acpl_content_filter( $content ) {
         }
         $top .= '</div>';
 
-
         $output .= '<h3 class="arconix-plugin-links-title">Links</h3>';
         $output .= '<ul class="arconix-plugin-links arconix-plugin-links-left">';
         $output .= "<li class='arconix-plugin-docs'><a href='{$docs}'>Documentation</a></li>";
