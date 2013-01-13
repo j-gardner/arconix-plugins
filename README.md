@@ -4,9 +4,9 @@
 
 * John Gardner ( [@j_gardner](http://twitter.com/j_gardner ) / [arconixpc.com](http://arconixpc.com/) )
 
-**Version**: 0.3
+**Version**: 0.5
 **Requires at least**: 3.4
-**Tested up to**: 3.5
+**Tested up to**: 3.5  
 **License**: GPLv2
 
 ## Description
