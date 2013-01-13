@@ -2,7 +2,7 @@
 
 **Contributors**:
 
-* John Gardner ( [@j_gardner](http://twitter.com/j_gardner ) / [arconixpc.com](http://arconixpc.com/) )
+John Gardner ( [@j_gardner](http://twitter.com/j_gardner ) / [arconixpc.com](http://arconixpc.com/) )
 
 * **Version**: 0.5
 * **Requires at least**: 3.4
