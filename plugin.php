@@ -92,12 +92,12 @@ class Arconix_Plugins {
                 'not_found'             => __( 'No plugins found',              'acpl' ),
                 'not_found_in_trash'    => __( 'No plugins found in the trash', 'acpl' )
             ),
-            'public'            => true,
-            'query_var'         => true,
-            'menu_position'     => 100,
-            'has_archive'       => true,
-            'supports'          => array( 'title', 'editor', 'excerpt', 'custom-fields' ),
-            'rewrite'           => array( 'slug' => 'plugins', 'with_front' => false )
+            'public'                => true,
+            'query_var'             => true,
+            'menu_position'         => 100,
+            'has_archive'           => true,
+            'supports'              => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+            'rewrite'               => array( 'slug' => 'plugins', 'with_front' => false )
         );
         $args = apply_filters( 'arconix_plugins_post_type_args', $args );
         register_post_type( 'plugins', $args );
