@@ -4,6 +4,7 @@
 
 John Gardner ( [@j_gardner](http://twitter.com/j_gardner ) / [arconixpc.com](http://arconixpc.com/) )
 
+**Details**:
 * **Version**: 0.5
 * **Requires at least**: 3.4
 * **Tested up to**: 3.5
