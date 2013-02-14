@@ -39,11 +39,11 @@ Currently, no.
 
 = I have a problem or a bug =
 
-* Post your concern at the [Issues section on Github](http://arcnx.co/acplissues)
+* Post your concern at the [Issues section on Github](http://arcnx.co/aplissues)
 
 = I have a great idea for your plugin! =
 
-That's fantastic! Feel free to submit a pull request over at [Github](http://arcnx.co/acplsource), add an idea to the [Trello Board](http://arcnx.co/acpltrello), or you can contact me through [Twitter](http://arcnx.co/twitter), [Facebook](http://arcnx.co/facebook) or my [Website](http://arcnx.co/1)
+That's fantastic! Feel free to submit a pull request over at [Github](http://arcnx.co/aplsource), add an idea to the [Trello Board](http://arcnx.co/apltrello), or you can contact me through [Twitter](http://arcnx.co/twitter), [Facebook](http://arcnx.co/facebook) or my [Website](http://arcnx.co/1)
 
 == Screenshots ==
 
