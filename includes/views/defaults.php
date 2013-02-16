@@ -1,8 +1,8 @@
 <?php
-$prefix = '_acpl_'; // set the prefix for the metabox registration
+$prefix = '_acpl_'; // Set the prefix for the metabox registration (WHICH IS NOT WORKING CURRENTLY)
 
 $defaults = array(
-	'post_type' = array(
+	'post_type' => array(
 		'slug' => 'plugins',
 		'args' => array(
 			'labels' => array(
