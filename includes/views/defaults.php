@@ -2,10 +2,10 @@
 $prefix = '_acpl_'; // Set the prefix for the metabox registration (WHICH IS NOT WORKING CURRENTLY)
 
 $defaults = array(
-	'post_type' => array(
-		'slug' => 'plugins',
-		'args' => array(
-			'labels' => array(
+    'post_type' => array(
+        'slug' => 'plugins',
+        'args' => array(
+            'labels' => array(
                 'name'                  => __( 'Plugins',                       'acpl' ),
                 'singular_name'         => __( 'Plugin',                        'acpl' ),
                 'add_new'               => __( 'Add New',                       'acpl' ),
@@ -26,8 +26,8 @@ $defaults = array(
             'supports'          => array( 'title', 'thumbnail', 'excerpt' ),
             'rewrite'           => array( 'slug' => 'plugins', 'with_front' => false )
         )
-	),
-	'meta_box' => array(
+    ),
+    'meta_box' => array(
         'id'            => 'plugins_box',
         'title'         => 'Plugin Details',
         'pages'         => array( 'plugins' ), // post type
