@@ -47,13 +47,13 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
 
         // Set our variables
         $plugname   = $details->name;
-        $plugtitle  = $plugname . __( 'Details', 'acpl' );
+        $plugtitle  = $plugname . ' Details';
         $version    = $details->version;
         $requires   = $details->requires;
         $compatible = $details->tested;
         $updated    = date( get_option( 'date_format' ), strtotime( $details->last_updated ) );
         $ago        = ARCONIX_PLUGINS::ago( strtotime( $details->last_updated ) );
-        $downloads  = $details->downloaded;
+        $downloads  = number_format( $details->downloaded );
         $downlink   = $details->download_link;
         $demolink   = esc_url( $custom["_acpl_demo"][0] );
 

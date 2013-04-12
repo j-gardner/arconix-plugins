@@ -201,7 +201,7 @@ class Arconix_Plugins {
 
                 echo 'Latest Version: ' . $details->version . '<br />';
                 echo 'Last Updated: ' . date( get_option( 'date_format' ) , strtotime( $details->last_updated ) ) . ' <em style="color: #aaa;">(' . $this->ago( strtotime( $details->last_updated ) ) . ')</em><br />';
-                echo 'Downloads: ' . $details->downloaded;
+                echo 'Downloads: ' . number_format( $details->downloaded );
 
                 break;
         }
@@ -238,6 +238,12 @@ class Arconix_Plugins {
                     'name'  => 'Demo',
                     'desc'  => 'Enter the demo URL',
                     'id'    => $prefix . 'demo',
+                    'type'  => 'text_medium',
+                ),
+                array(
+                    'name'  => 'Download',
+                    'desc'  => 'Enter the download URL',
+                    'id'    => $prefix . 'download',
                     'type'  => 'text_medium',
                 ),
                 array(
@@ -326,7 +332,8 @@ class Arconix_Plugins {
 
         // Create our links
         $output = '<div class="arconix-plugin-top">';
-            $url = esc_url( $details->download_link );
+        if( isset( $custom["_acpl_download"][0] ) ) {
+            $url = esc_url( $custom["_acpl_download"][0] );
             $output .= "<a href='{$url}' class='arconix-plugin-download'>Download</a>";
         }
         if( isset( $custom["_acpl_demo"][0] ) ) {
@@ -435,17 +442,8 @@ class Arconix_Plugins {
      */
     function ago( $tm, $rcs = 0 ) {
         $defaults = apply_filters( 'arconix_plugins_ago_defaults', array(
-            'periods' => array( 
-                __( 'second',   'acpl' ), 
-                __( 'minute',   'acpl' ), 
-                __( 'hour',     'acpl' ), 
-                __( 'day',      'acpl' ), 
-                __( 'week',     'acpl' ), 
-                __( 'month',    'acpl' ), 
-                __( 'year',     'acpl' ), 
-                __( 'decade',   'acpl' ) 
-            ),
-            'tense' => __( 'ago', 'acpl' )
+          'periods' => array( 'second', 'minute', 'hour', 'day', 'week', 'month', 'year', 'decade' ),
+          'tense' => 'ago'
         ) );
 
         $cur_tm = time();

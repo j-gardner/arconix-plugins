@@ -1,7 +1,7 @@
 === Arconix Plugins ===
 Contributors: jgardner03
 Donate link: http://arcnx.co/acpldonation
-Tags: arconix, plugins, plugin information
+Tags: arconix, plugins
 Requires at least: 3.4
 Tested up to: 3.5.1
 Stable tag: 1.0
