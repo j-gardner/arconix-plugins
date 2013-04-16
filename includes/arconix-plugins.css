@@ -1,17 +1,30 @@
-/**
- * Arconix Plugins Stylesheet
- *
- * The best way to modify this stylesheet is to copy this file to the root of your
- * theme's folder and rename it to 'arconix-plugins.css'. The plugin will load that sheet in
- * place of this, allowing easy changes which won't be overwritten during a plugin upgrade
- */
+/* 
+ARCONIX PLUGINS CSS
+--------------------------
+
+PLEASE DO NOT make modifications to this file directly as it will be overwritten on update.
+Instead, save a copy of this file to your theme or child theme directory. It will then be
+loaded in place of the plugin's version and will maintain your changes on upgrade
+
+IMPORTANT NOTE: Since the directory structure will be changing, and image URLS are always loaded
+relative to their current path, the links to the sprite in this file will also need to change. 
+For example:
+
+    'url(../images ...'
+
+would have to be changed to
+
+    'url(../../plugins/arconix-plugins/images ...'
+
+in order to for the files to be displayed.
+*/
 
 ul.arconix-plugin-links li {
     list-style-type: none;
 }
 
 .arconix-plugin-links li a {
-    background: url(images/sprite-vert.png) transparent no-repeat;
+    background: url(../images/sprite-vert.png) transparent no-repeat;
     padding-left: 22px;
 }
 
