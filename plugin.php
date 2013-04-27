@@ -4,7 +4,7 @@
  * Plugin URI: http://arconixpc.com/
  * Description: Plugin for displaying WP.org-hosted plugins on your website
  *
- * Version: 0.5
+ * Version: 1.0
  *
  * Author: John Gardner
  * Author URI: http://arconixpc.com
@@ -23,20 +23,20 @@ class Arconix_Plugins {
     function __construct() {
         $this->constants();
 
-        register_activation_hook( __FILE__, array( $this, 'activation' ) );
-        register_deactivation_hook( __FILE__, array( $this, 'deactivation' ) );
+        register_activation_hook( __FILE__,                 array( $this, 'activation' ) );
+        register_deactivation_hook( __FILE__,               array( $this, 'deactivation' ) );
 
-        add_action( 'init', 'arconix_plugins_init_meta_boxes', 9999 );
-        add_action( 'init', array( $this, 'content_types' ) );
-        add_action( 'widgets_init', array( $this, 'plugin_widgets' ) );
-        add_action( 'wp_enqueue_scripts', array( $this, 'scripts' ) );
-        add_action( 'manage_plugins_posts_custom_column', array( $this, 'custom_columns_action' ) );
-        add_action( 'right_now_content_table_end', array( $this, 'right_now' ) );
+        add_action( 'init',                                 'arconix_plugins_init_meta_boxes', 9999 );
+        add_action( 'init',                                 array( $this, 'content_types' ) );
+        add_action( 'widgets_init',                         array( $this, 'plugin_widgets' ) );
+        add_action( 'wp_enqueue_scripts',                   array( $this, 'scripts' ) );
+        add_action( 'manage_plugins_posts_custom_column',   array( $this, 'custom_columns_action' ) );
+        add_action( 'right_now_content_table_end',          array( $this, 'right_now' ) );
 
-        add_filter( 'manage_plugins_posts_columns', array( $this,'custom_columns_filter' ) );
-        add_filter( 'cmb_meta_boxes', array( $this, 'metaboxes' ) );
-        add_filter( 'post_updated_messages', array( $this, 'messages' ) );
-        add_filter( 'the_content', array( $this, 'content_filter' ) );        
+        add_filter( 'manage_plugins_posts_columns',         array( $this,'custom_columns_filter' ) );
+        add_filter( 'cmb_meta_boxes',                       array( $this, 'metaboxes' ) );
+        add_filter( 'post_updated_messages',                array( $this, 'messages' ) );
+        add_filter( 'the_content',                          array( $this, 'content_filter' ) );        
     }
 
     /**
@@ -45,13 +45,13 @@ class Arconix_Plugins {
      * @since 0.3
      */
     function constants() {
-        define( 'ACPL_VERSION', '0.5' );
-        define( 'ACPL_URL', trailingslashit( plugin_dir_url( __FILE__ ) ) );
-        define( 'ACPL_INCLUDES_URL', trailingslashit( ACPL_URL . 'includes' ) );
-        define( 'ACPL_IMAGES_URL', trailingslashit( ACPL_INCLUDES_URL . 'images' ) );
-        define( 'ACPL_DIR', trailingslashit( plugin_dir_path( __FILE__ ) ) );
-        define( 'ACPL_INCLUDES_DIR', trailingslashit( ACPL_DIR . 'includes' ) );
-        define( 'ACPL_VIEWS_DIR', trailingslashit( ACPL_INCLUDES_DIR . 'views' ) );
+        define( 'ACPL_VERSION',             '1.0' );
+        define( 'ACPL_URL',                 trailingslashit( plugin_dir_url( __FILE__ ) ) );
+        define( 'ACPL_INCLUDES_URL',        trailingslashit( ACPL_URL . 'includes' ) );
+        define( 'ACPL_IMAGES_URL',          trailingslashit( ACPL_INCLUDES_URL . 'images' ) );
+        define( 'ACPL_DIR',                 trailingslashit( plugin_dir_path( __FILE__ ) ) );
+        define( 'ACPL_INCLUDES_DIR',        trailingslashit( ACPL_DIR . 'includes' ) );
+        define( 'ACPL_VIEWS_DIR',           trailingslashit( ACPL_INCLUDES_DIR . 'views' ) );
     }
 
     /**
@@ -82,7 +82,29 @@ class Arconix_Plugins {
      * @return array $defaults
      */
     function defaults() {
-        require_once( ACPL_VIEWS_DIR . 'defaults.php' );
+        $defaults = array(
+            'post_type' => array(
+                'slug' => 'plugins',
+                'args' => array(
+                    'labels' => array(
+                        'name'                  => __( 'Plugins',                       'acpl' ),
+                        'singular_name'         => __( 'Plugin',                        'acpl' ),
+                        'add_new_item'          => __( 'Add New Plugin',                'acpl' ),
+                        'edit_item'             => __( 'Edit Plugin',                   'acpl' ),
+                        'new_item'              => __( 'New Plugin',                    'acpl' ),
+                        'view_item'             => __( 'View Plugin',                   'acpl' ),
+                        'search_items'          => __( 'Search Plugins',                'acpl' ),
+                        'not_found'             => __( 'No plugins found',              'acpl' ),
+                        'not_found_in_trash'    => __( 'No plugins found in the trash', 'acpl' )
+                    ),
+                    'public'            => true,
+                    'query_var'         => true,
+                    'menu_position'     => 100,
+                    'has_archive'       => true,
+                    'supports'          => array( 'title', 'thumbnail', 'excerpt' ),
+                    'rewrite'           => array( 'with_front' => false )
+                )
+            )
         return apply_filters( 'arconix_plugins_defaults', $defaults );
     }
 
@@ -220,7 +242,7 @@ class Arconix_Plugins {
         //$defaults = $this->defaults(); <--- This unfortunately is not working at the moment
         //$meta_boxes[] = $defaults['meta_box'];
         
-        $metabox = array(
+        $metabox = apply_filters( 'arconix_plugins_metabox_defaults', array(
             'id'            => 'plugins_box',
             'title'         => 'Plugin Details',
             'pages'         => array( 'plugins' ), // post type
@@ -238,6 +260,12 @@ class Arconix_Plugins {
                     'name'  => 'Demo',
                     'desc'  => 'Enter the demo URL',
                     'id'    => $prefix . 'demo',
+                    'type'  => 'text_medium',
+                ),
+                array(
+                    'name'  => 'Donation',
+                    'desc'  => 'Enter the donation URL',
+                    'id'    => $prefix . 'donation',
                     'type'  => 'text_medium',
                 ),
                 array(
@@ -271,7 +299,7 @@ class Arconix_Plugins {
                     'type'  => 'text_medium',
                 )
             )
-        );
+        ) );
 
         $meta_boxes[] = $metabox;        
 
@@ -286,13 +314,14 @@ class Arconix_Plugins {
      * @version 0.3
      */
     function scripts() {
-        if( file_exists( get_stylesheet_directory() . '/arconix-plugins.css' ) )
-            wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, ACPL_VERSION );
-        elseif( file_exists( get_template_directory() . '/arconix-plugins.css' ) )
-            wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, ACPL_VERSION );
-        else
-            if( apply_filters( 'pre_register_arconix_plugins_css', true ) )
+        if( apply_filters( 'pre_register_arconix_plugins_css', true ) ) {
+            if( file_exists( get_stylesheet_directory() . '/arconix-plugins.css' ) )
+                wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, ACPL_VERSION );
+            elseif( file_exists( get_template_directory() . '/arconix-plugins.css' ) )
+                wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, ACPL_VERSION );
+            else
                 wp_enqueue_style( 'arconix-plugins', ACPL_INCLUDES_URL . 'arconix-plugins.css', false, ACPL_VERSION );
+        }
     }
 
     /**
@@ -340,6 +369,10 @@ class Arconix_Plugins {
             $url = esc_url( $custom["_acpl_demo"][0] );
             $output .= '<div><span>or</span></div>';
             $output .= "<a href='{$url}' class='arconix-plugin-demo'>Demo</a>";
+        }
+        if( isset( $custom["_acpl_donation"][0] ) ) {
+            $url = esc_url( $custom["_acpl_donation"][0] );
+            $output .= "<a href='{$url}' class='arconix-plugin-donation'>Donation</a>";
         }
         $output .= '</div>';
 
