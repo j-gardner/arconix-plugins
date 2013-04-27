@@ -56,6 +56,7 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         $downloads  = number_format( $details->downloaded );
         $downlink   = $details->download_link;
         $demolink   = esc_url( $custom["_acpl_demo"][0] );
+        $donatlink  = esc_url( $custom["_acpl_donate"][0] );
 
 
         echo $before_title . $plugtitle . $after_title;
@@ -72,6 +73,8 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         echo "<a class='arconix-button arconix-button-large arconix-button-green arconix-button-download' href='{$downlink}'>Download</a>";
         if( $demolink )
             echo "<a class='arconix-button arconix-button-large arconix-button-silver arconix-button-demo' href='{$demolink}'>Demo</a>";
+        if( $donatlink )
+            echo "<a class='arconix-button-donate' href='{$donatlink}'>Buy me a coffee</a>";
         echo "</p>";
 
         // After widget (defined by themes)
