@@ -74,7 +74,7 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         if( $demolink )
             echo "<a class='arconix-button arconix-button-large arconix-button-silver arconix-button-demo' href='{$demolink}'>Demo</a>";
         if( $donatlink )
-            echo "<a class='arconix-button-donate' href='{$donatlink}'>Buy me a coffee</a>";
+            echo "Enjoy this plugin? Please consider <a class='arconix-button-donate' href='{$donatlink}'>buying me a coffee</a>";
         echo "</p>";
 
         // After widget (defined by themes)
