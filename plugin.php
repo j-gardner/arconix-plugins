@@ -105,6 +105,8 @@ class Arconix_Plugins {
                     'rewrite'           => array( 'with_front' => false )
                 )
             )
+        );
+
         return apply_filters( 'arconix_plugins_defaults', $defaults );
     }
 
