@@ -26,12 +26,13 @@ class Arconix_Plugins {
         register_activation_hook( __FILE__,                 array( $this, 'activation' ) );
         register_deactivation_hook( __FILE__,               array( $this, 'deactivation' ) );
 
-        add_action( 'init',                                 'arconix_plugins_init_meta_boxes', 9999 );
+        add_action( 'init',                                 'arconix_plugins_init', 9999 );
         add_action( 'init',                                 array( $this, 'content_types' ) );
         add_action( 'widgets_init',                         array( $this, 'plugin_widgets' ) );
         add_action( 'wp_enqueue_scripts',                   array( $this, 'scripts' ) );
         add_action( 'manage_plugins_posts_custom_column',   array( $this, 'custom_columns_action' ) );
-        add_action( 'right_now_content_table_end',          array( $this, 'right_now' ) );
+        add_action( 'dashboard_glance_items',               array( $this, 'at_a_glance' ) );
+        add_action( 'admin_enqueue_scripts',                array( $this, 'admin_css' ) );
 
         add_filter( 'manage_plugins_posts_columns',         array( $this,'custom_columns_filter' ) );
         add_filter( 'cmb_meta_boxes',                       array( $this, 'metaboxes' ) );
@@ -48,10 +49,10 @@ class Arconix_Plugins {
         define( 'ACPL_VERSION',             '1.0' );
         define( 'ACPL_URL',                 trailingslashit( plugin_dir_url( __FILE__ ) ) );
         define( 'ACPL_INCLUDES_URL',        trailingslashit( ACPL_URL . 'includes' ) );
+        define( 'ACPL_CSS_URL',             trailingslashit( ACP_INCLUDES_URL . 'css' ) );
         define( 'ACPL_IMAGES_URL',          trailingslashit( ACPL_INCLUDES_URL . 'images' ) );
         define( 'ACPL_DIR',                 trailingslashit( plugin_dir_path( __FILE__ ) ) );
         define( 'ACPL_INCLUDES_DIR',        trailingslashit( ACPL_DIR . 'includes' ) );
-        define( 'ACPL_VIEWS_DIR',           trailingslashit( ACPL_INCLUDES_DIR . 'views' ) );
     }
 
     /**
@@ -100,6 +101,7 @@ class Arconix_Plugins {
                     'public'            => true,
                     'query_var'         => true,
                     'menu_position'     => 100,
+                    'menu_icon'         => 'dashicons-admin-plugins',
                     'has_archive'       => true,
                     'supports'          => array( 'title', 'thumbnail', 'excerpt' ),
                     'rewrite'           => array( 'with_front' => false )
@@ -129,7 +131,7 @@ class Arconix_Plugins {
     function plugin_widgets() {
         $widgets = array( 'Arconix_Widget_Plugin_Details', 'Arconix_Widget_Plugin_Resources', 'Arconix_Widget_Plugin_Related' );
 
-        foreach ($widgets as $widget ) {
+        foreach ( $widgets as $widget ) {
             register_widget( $widget );
         }
         
@@ -168,13 +170,13 @@ class Arconix_Plugins {
     }
 
     /**
-     * Add the Post type to the "Right Now" Dashboard Widget
-     *
-     * @link http://bajada.net/2010/06/08/how-to-add-custom-post-types-and-taxonomies-to-the-wordpress-right-now-dashboard-widget
+     * Add the Post type to the "At a Glance" Dashboard Widget
+     * 
      * @since 0.1
      */
-    function right_now() {
-        include_once( ACPL_VIEWS_DIR . 'right-now.php' );
+    function at_a_glance() {
+        $glancer = new Gamajo_Dashboard_Glancer;
+        $glancer->add( 'plugins' );
     }
 
     /**
@@ -241,8 +243,6 @@ class Arconix_Plugins {
      */
     function metaboxes( $meta_boxes ) {
         $prefix = "_acpl_";
-        //$defaults = $this->defaults(); <--- This unfortunately is not working at the moment
-        //$meta_boxes[] = $defaults['meta_box'];
         
         $metabox = apply_filters( 'arconix_plugins_metabox_defaults', array(
             'id'            => 'plugins_box',
@@ -324,6 +324,15 @@ class Arconix_Plugins {
             else
                 wp_enqueue_style( 'arconix-plugins', ACPL_INCLUDES_URL . 'arconix-plugins.css', false, ACPL_VERSION );
         }
+    }
+
+    /**
+     * Includes admin css
+     *
+     * @since 0.1.0
+     */
+    function admin_css() {
+        wp_enqueue_style( 'arconix-plugins-admin', ACPL_CSS_URL . 'admin.css', false, ACPL_VERSION );
     }
 
     /**
@@ -507,9 +516,12 @@ class Arconix_Plugins {
  *
  * @since 0.1
  */
-function arconix_plugins_init_meta_boxes() {
+function arconix_plugins_init() {
     if( ! class_exists( 'cmb_Meta_Box' ) )
         require_once( plugin_dir_path( __FILE__ ) . '/includes/metabox/init.php' );
+
+    if ( ! class_exists( 'Gamajo_Dashboard_Glancer' ) )
+        require_once( plugin_dir_path( __FILE__ ) . '/includes/class-gamajo-dashboard-glancer.php');
 }
 
 require_once( plugin_dir_path( __FILE__ ) . '/includes/class-widgets.php' );

@@ -10,7 +10,7 @@ IMPORTANT NOTE: Since the directory structure will be changing, and image URLS a
 relative to their current path, the links to the sprite in this file will also need to change. 
 For example:
 
-    'url(../images ...'
+    'url(../../images ...'
 
 would have to be changed to
 
@@ -24,7 +24,7 @@ ul.arconix-plugin-links li {
 }
 
 .arconix-plugin-links li a {
-    background: url(../images/sprite-vert.png) transparent no-repeat;
+    background: url(../../images/sprite-vert.png) transparent no-repeat;
     padding-left: 22px;
 }
 
