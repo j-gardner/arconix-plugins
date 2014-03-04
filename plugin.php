@@ -49,7 +49,7 @@ class Arconix_Plugins {
         define( 'ACPL_VERSION',             '1.0' );
         define( 'ACPL_URL',                 trailingslashit( plugin_dir_url( __FILE__ ) ) );
         define( 'ACPL_INCLUDES_URL',        trailingslashit( ACPL_URL . 'includes' ) );
-        define( 'ACPL_CSS_URL',             trailingslashit( ACP_INCLUDES_URL . 'css' ) );
+        define( 'ACPL_CSS_URL',             trailingslashit( ACPL_INCLUDES_URL . 'css' ) );
         define( 'ACPL_IMAGES_URL',          trailingslashit( ACPL_INCLUDES_URL . 'images' ) );
         define( 'ACPL_DIR',                 trailingslashit( plugin_dir_path( __FILE__ ) ) );
         define( 'ACPL_INCLUDES_DIR',        trailingslashit( ACPL_DIR . 'includes' ) );
