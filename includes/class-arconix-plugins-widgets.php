@@ -18,29 +18,30 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
     /**
      * Widget Output
      *
-     * @param type $args Display arguments including before_title, after_title, before_widget, and after_widget.
-     * @param type $instance The settings for the particular instance of the widget
-     * @since 0.5
+     * @since       0.5
+     * @version     1.0.0
+     * @param       array   $args       Display arguments including before_title, after_title, before_widget, and after_widget.
+     * @param       array   $instance   The settings for the particular instance of the widget
      */
     function widget( $args, $instance ) {
+
+        // Bail if we're not on a plugin page
+        if( ! is_singular( 'plugins' ) ) return;
+
         extract( $args );
 
         // Before widget (defined by themes)
         echo $before_widget;
 
-        // Output our plugin details
-        if( ! is_singular( 'plugins' ) ) return;
+        $p = new Arconix_Plugins();
 
-        global $post;
-
-        $custom = get_post_custom();
-        isset( $custom["_acpl_slug"][0] )? $slug = $custom["_acpl_slug"][0] : $slug = '';
+        $slug = $p->get_slug();
 
         // Bail if $slug has no value (useful if plugin is not being hosted on WP.org or isn't live yet)
-        if( ! $slug ) return;
+        if ( false === $slug ) return;
 
         // Grab the plugin details from the WP.org servers
-        $details = unserialize( ARCONIX_PLUGINS::get_wporg_custom_plugin_data( $slug ) );
+        $details = $p->get_wporg_custom_plugin_data( $slug );
 
         // Bail out here if there's a problem with the WP server, etc...
         if( ! $details ) return;
@@ -51,16 +52,16 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         $version    = $details->version;
         $requires   = $details->requires;
         $compatible = $details->tested;
-        $updated    = date( get_option( 'date_format' ), strtotime( $details->last_updated ) );
-        $ago        = ARCONIX_PLUGINS::ago( strtotime( $details->last_updated ) );
-        $downloads  = number_format( $details->downloaded );
+        $updated    = $p->get_last_updated();
+        $ago        = $p->ago( strtotime( $details->last_updated ) );
+        $downloads  = $p->get_downloads();
         $downlink   = $details->download_link;
         $demolink   = esc_url( $custom["_acpl_demo"][0] );
         $donatlink  = esc_url( $custom["_acpl_donate"][0] );
 
 
         echo $before_title . $plugtitle . $after_title;
-        
+
         echo "<table class='arconix-plugins-table arconix-plugins-table-details'><tbody>";
         echo "<tr><td>Version</td><td>{$version}</td></tr>";
         echo "<tr><td>Requires</td><td>{$requires}</td></tr>";
@@ -85,10 +86,11 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
     /**
      * Update a particular instance.
      *
-     * @param array $new_instance New settings for this instance as input by the user via form()
-     * @param array $old_instance Old settings for this instance
-     * @return array Settings to save or bool false to cancel saving
-     * @since 0.5
+     * @since   0.5
+     * @version 1.0.0
+     * @param   array   $new_instance   New settings for this instance as input by the user via form()
+     * @param   array   $old_instance   Old settings for this instance
+     * @return  array                   Settings to save or bool false to cancel saving
      */
     function update( $new_instance, $old_instance ) {
         return;
@@ -97,8 +99,8 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
     /**
      * Widget form
      *
-     * @param array $instance Current settings
-     * @since 0.5
+     * @since   0.5
+     * @param   array   $instance   Current settings
      */
     function form( $instance ) {
         echo '<p>This widget will only work when displayed on an individual plugin page.</p>';
@@ -122,28 +124,29 @@ class Arconix_Widget_Plugin_Resources extends WP_Widget {
     /**
      * Widget Output
      *
-     * @param type $args Display arguments including before_title, after_title, before_widget, and after_widget.
-     * @param type $instance The settings for the particular instance of the widget
-     * @since 0.5
+     * @since   0.5
+     * @version 1.0.0
+     * @param   array   $args       Display arguments including before_title, after_title, before_widget, and after_widget.
+     * @param   array   $instance   The settings for the particular instance of the widget
+     *
      */
     function widget( $args, $instance ) {
         // Bail if not a single-plugin
         if( ! is_singular( 'plugins' ) ) return;
 
-        global $post;
+        $p = new Arconix_Plugins();
 
-        $custom = get_post_custom();
-        isset( $custom["_acpl_slug"][0] )? $slug = $custom["_acpl_slug"][0] : $slug = '';
-
+        $slug = $p->get_slug();
         // Bail if $slug has no value (useful if plugin is not being hosted on WP.org or isn't live yet)
-        if( ! $slug ) return;
+        if ( false === $slug ) return;
 
         // Grab the plugin details from the WP.org servers
-        $details = unserialize( ARCONIX_PLUGINS::get_wporg_custom_plugin_data( $slug ) );
+        $details = $p->get_wporg_custom_plugin_data( $slug );
 
         // Bail out here if there's a problem with the WP server, etc...
         if( ! $details ) return;
 
+        $custom = get_post_custom();
         $plugname   = $details->name;
         $plugtitle  = $plugname . ' Resources';
         $help       = esc_url( $custom["_acpl_help"][0] );
@@ -174,10 +177,10 @@ class Arconix_Widget_Plugin_Resources extends WP_Widget {
     /**
      * Update a particular instance.
      *
-     * @param array $new_instance New settings for this instance as input by the user via form()
-     * @param array $old_instance Old settings for this instance
-     * @return array Settings to save or bool false to cancel saving
-     * @since 0.5
+     * @since   0.5
+     * @param   array   $new_instance   New settings for this instance as input by the user via form()
+     * @param   array   $old_instance   Old settings for this instance
+     * @return  array                   Settings to save or bool false to cancel saving
      */
     function update( $new_instance, $old_instance ) {
         return $instance;
@@ -212,27 +215,28 @@ class Arconix_Widget_Plugin_Related extends WP_Widget {
     /**
      * Widget Output
      *
-     * @param type $args Display arguments including before_title, after_title, before_widget, and after_widget.
-     * @param type $instance The settings for the particular instance of the widget
-     * @since 0.5
+     * @since   0.5
+     * @param   array   $args       Display arguments including before_title, after_title, before_widget, and after_widget.
+     * @param   array   $instance   The settings for the particular instance of the widget
+     *
      */
     function widget( $args, $instance ) {
         if( ! is_singular( 'plugins' ) ) return;
 
-        global $post;
+        $p = new Arconix_Plugin();
 
-        $custom = get_post_custom();
-        isset( $custom["_acpl_slug"][0] )? $slug = $custom["_acpl_slug"][0] : $slug = '';
+        $slug = $p->get_slug();
 
         // Bail if $slug has no value (useful if plugin is not being hosted on WP.org or isn't live yet)
         if( ! $slug ) return;
 
         // Grab the plugin details from the WP.org servers
-        $details = unserialize( ARCONIX_PLUGINS::get_wporg_custom_plugin_data( $slug ) );
+        $details = $p->get_wporg_custom_plugin_data( $slug );
 
         // Bail out here if there's a problem with the WP server, etc...
         if( ! $details ) return;
 
+        $custom = get_post_custom();
         // Set our variables
         $plugname   = $details->name;
         $plugtitle  = $plugname . ' Posts';
@@ -252,15 +256,15 @@ class Arconix_Widget_Plugin_Related extends WP_Widget {
         if ( $q->have_posts() ) {
 
             extract( $args );
-            
+
             // Before widget (defined by themes)
             echo $before_widget;
 
             echo $before_title . $plugtitle . $after_title;
 
-            echo'<ul>';
+            echo '<ul>';
 
-            while ( $q->have_posts() ) : $q->the_post(); 
+            while ( $q->have_posts() ) : $q->the_post();
                 echo '<li>';
                 echo '<a href="' . get_permalink() . '">' . get_the_title() . '</a>';
                 if( $show_date )
@@ -281,10 +285,10 @@ class Arconix_Widget_Plugin_Related extends WP_Widget {
     /**
      * Update a particular instance.
      *
-     * @param array $new_instance New settings for this instance as input by the user via form()
-     * @param array $old_instance Old settings for this instance
-     * @return array Settings to save or bool false to cancel saving
-     * @since 0.5
+     * @since   0.5
+     * @param   array   $new_instance   New settings for this instance as input by the user via form()
+     * @param   array   $old_instance   Old settings for this instance
+     * @return  array                   Settings to save or bool false to cancel saving
      */
     function update( $new_instance, $old_instance ) {
         $instance = $old_instance;
@@ -297,8 +301,8 @@ class Arconix_Widget_Plugin_Related extends WP_Widget {
     /**
      * Widget form
      *
-     * @param array $instance Current settings
-     * @since 0.5
+     * @since   0.5
+     * @param   array   $instance   Current settings
      */
     function form( $instance ) {
         echo '<p>This widget will only work when displayed on an individual plugin page.</p>';

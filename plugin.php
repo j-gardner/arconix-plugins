@@ -4,7 +4,7 @@
  * Plugin URI: http://arconixpc.com/
  * Description: Plugin for displaying WP.org-hosted plugins on your website
  *
- * Version: 1.0
+ * Version: 1.0.0
  *
  * Author: John Gardner
  * Author URI: http://arconixpc.com
@@ -14,56 +14,52 @@
  */
 
 
-class Arconix_Plugins_Loader {
+class Arconix_Plugins {
 
-    protected $version;
+    /**
+     * Stores the current version of the plugin.
+     *
+     * @since   0.1
+     * @version 1.0.0
+     * @var     string  $version    current plugin version
+     */
+    public static $version = '1.0.0';
 
+    /**
+     * Initialize the class and set its properties.
+     *
+     * @since   1.0.0
+     */
     public function __construct() {
-        $this->version = '1.0.0';
-
         $this->load_dependencies();
         $this->load_admin();
-        $this->load_public();
-        //$this->load_widgets();
     }
 
+    /**
+     * Load the required dependencies for the plugin.
+     *
+     * - Admin loads the backend functionality
+     * - Public provides front-end functionality
+     * - Widgets registers the site widgets
+     */
     private function load_dependencies() {
-        require_once( plugin_dir_path( __FILE__ ) . 'includes/class-arconix-plugins-admin.php' );
-        require_once( plugin_dir_path( __FILE__ ) . 'includes/class-arconix-plugins-public.php' );
-        require_once( plugin_dir_path( __FILE__ ) . '/includes/class-arconix-plugins-widgets.php' );
+        require_once( plugin_dir_path( __FILE__ ) . '/includes/class-arconix-plugins-admin.php' );
+        require_once( plugin_dir_path( __FILE__ ) . '/includes/class-arconix-plugin.php' );
     }
+
 
     private function load_admin() {
         new Arconix_Plugins_Admin( $this->get_version() );
     }
 
-    private function load_public() {
-        new Arconix_Plugins_Public( $this->get_version() );
-    }
 
     public function get_version() {
-        return $this->version;
+        return self::version;
     }
 }
 
-
-
-
-
-
-/**
- * Load the plugin custom metabox
- *
- * @since 0.1
- */
-function arconix_plugins_init() {
-    if( ! class_exists( 'cmb_Meta_Box' ) )
-        require_once( plugin_dir_path( __FILE__ ) . '/includes/metabox/init.php' );
-
-    if ( ! class_exists( 'Gamajo_Dashboard_Glancer' ) )
-        require_once( plugin_dir_path( __FILE__ ) . '/includes/class-gamajo-dashboard-glancer.php');
+/** Vroom vroom */
+add_action( 'plugins_loaded', 'arconix_plugins_run' );
+function arconix_plugins_run() {
+    new Arconix_Plugins();
 }
-
-
-
-new Arconix_Plugins;
