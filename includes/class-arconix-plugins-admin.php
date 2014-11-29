@@ -124,8 +124,6 @@ class Arconix_Plugins_Admin {
      * @since 0.5
      */
     public function plugin_widgets() {
-        require_once( $this->dir . 'class-arconix-plugins-widgets.php' );
-
         $widgets = array( 'Arconix_Widget_Plugin_Details', 'Arconix_Widget_Plugin_Resources', 'Arconix_Widget_Plugin_Related' );
 
         foreach ( $widgets as $widget ) {
@@ -172,7 +170,7 @@ class Arconix_Plugins_Admin {
      */
     public function custom_columns_action( $column ) {
 
-        $p = new Arconix_Plugins_Public();
+        $p = new Arconix_Plugin();
 
         switch( $column ) {
             case 'plugins_details':
@@ -211,7 +209,7 @@ class Arconix_Plugins_Admin {
 
         if( ! 'plugins' == get_post_type() ) return $content;
 
-        $p = new Arconix_Plugins_Public();
+        $p = new Arconix_Plugin();
 
         $slug = $p->get_slug( $post->ID );
 
@@ -377,11 +375,11 @@ class Arconix_Plugins_Admin {
     public function scripts() {
         if( apply_filters( 'pre_register_arconix_plugins_css', true ) ) {
             if( file_exists( get_stylesheet_directory() . '/arconix-plugins.css' ) )
-                wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins::$version );
+                wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, $this->version );
             elseif( file_exists( get_template_directory() . '/arconix-plugins.css' ) )
-                wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins::$version );
+                wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, $this->version );
             else
-                wp_enqueue_style( 'arconix-plugins', $this->url . 'css/arconix-plugins.css', false, Arconix_Plugins::$version );
+                wp_enqueue_style( 'arconix-plugins', $this->url . 'css/arconix-plugins.css', false, $this->version );
         }
     }
 
@@ -392,7 +390,7 @@ class Arconix_Plugins_Admin {
      * @version 1.0.0
      */
     public function admin_css() {
-        wp_enqueue_style( 'arconix-plugins-admin', $this->url . 'css/admin.css', false, Arconix_Plugins::$version );
+        wp_enqueue_style( 'arconix-plugins-admin', $this->url . 'css/admin.css', false, $this->version );
     }
 
     /**
