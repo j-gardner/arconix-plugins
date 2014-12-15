@@ -20,9 +20,10 @@ class Arconix_Plugins {
      * Stores the current version of the plugin.
      *
      * @since   0.5
+     * @access  private
      * @var     string  $version    Current plugin version
      */
-    private $version = '1.0.0';
+    private $version;
 
     /**
      * The directory path to this plugin's 'includes' folder.
@@ -39,6 +40,7 @@ class Arconix_Plugins {
      * @since   1.0.0
      */
     public function __construct() {
+        $this->version = '1.0.0';
         $this->inc = trailingslashit( plugin_dir_path( __FILE__ ) . '/includes' );
         $this->load_dependencies();
         $this->load_admin();
