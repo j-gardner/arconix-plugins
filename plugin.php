@@ -44,6 +44,8 @@ class Arconix_Plugins {
         $this->inc = trailingslashit( plugin_dir_path( __FILE__ ) . '/includes' );
         $this->load_dependencies();
         $this->load_admin();
+
+        add_action( 'init', array( $this, 'metabox_init' ), 9999 );
     }
 
     /**
@@ -58,9 +60,6 @@ class Arconix_Plugins {
         require_once( $this->inc . 'class-arconix-plugins-public.php' );
         require_once( $this->inc . 'class-arconix-plugins-widgets.php' );
 
-        if ( ! class_exists( 'cmb_Meta_Box' ) )
-            require_once( $this->inc . 'metabox/init.php');
-
         if ( ! class_exists( 'Gamajo_Dashboard_Glancer' ) )
             require_once( $this->inc . 'class-gamajo-dashboard-glancer.php' );
     }
@@ -72,6 +71,16 @@ class Arconix_Plugins {
      */
     private function load_admin() {
         new Arconix_Plugins_Admin( $this->get_version() );
+    }
+
+    /**
+     * Conditionally load the metabox class
+     *
+     * @since   1.0.0
+     */
+    public function metabox_init() {
+        if ( ! class_exists( 'cmb_Meta_Box' ) )
+            require_once( $this->inc . 'metabox/init.php');
     }
 
     /**
