@@ -7,15 +7,6 @@
 class Arconix_Plugins_Admin {
 
     /**
-     * The version of this plugin.
-     *
-     * @since   1.0.0
-     * @access  private
-     * @var     string      $version    The vurrent version of this plugin.
-     */
-    private $version;
-
-    /**
      * The directory path to this plugin.
      *
      * @since   1.0.0
@@ -41,15 +32,26 @@ class Arconix_Plugins_Admin {
      * @access  private
      * @param   string      $version    The version of this plugin.
      */
-    public function __construct( $version ) {
-        $this->version = $version;
+    public function __construct() {
         $this->dir = trailingslashit( plugin_dir_path( __FILE__ ) );
         $this->url = trailingslashit( plugin_dir_url( __FILE__ ) );
+        $this->init();
 
         register_activation_hook( __FILE__,                 array( $this, 'activation' ) );
         register_deactivation_hook( __FILE__,               array( $this, 'deactivation' ) );
 
-        add_action( 'init',                                 array( $this, 'content_types' ) );
+
+    }
+
+
+    /**
+     * Init the Admin side
+     *
+     * Loads all actions and filters to be used.
+     *
+     * @since   1.0.1
+     */
+    public function init() {
         add_action( 'manage_plugins_posts_custom_column',   array( $this, 'custom_columns_action' ) );
         add_action( 'dashboard_glance_items',               array( $this, 'at_a_glance' ) );
         add_action( 'admin_enqueue_scripts',                array( $this, 'admin_css' ) );
