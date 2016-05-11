@@ -36,11 +36,6 @@ class Arconix_Plugins_Admin {
         $this->dir = trailingslashit( plugin_dir_path( __FILE__ ) );
         $this->url = trailingslashit( plugin_dir_url( __FILE__ ) );
         $this->init();
-
-        register_activation_hook( __FILE__,                 array( $this, 'activation' ) );
-        register_deactivation_hook( __FILE__,               array( $this, 'deactivation' ) );
-
-
     }
 
 
@@ -53,71 +48,12 @@ class Arconix_Plugins_Admin {
      */
     public function init() {
         add_action( 'manage_plugins_posts_custom_column',   array( $this, 'custom_columns_action' ) );
-        add_action( 'dashboard_glance_items',               array( $this, 'at_a_glance' ) );
         add_action( 'admin_enqueue_scripts',                array( $this, 'admin_css' ) );
         add_action( 'wp_enqueue_scripts',                   array( $this, 'scripts' ) );
-        add_action( 'widgets_init',                         array( $this, 'plugin_widgets' ) );
+        //add_action( 'widgets_init',                         array( $this, 'plugin_widgets' ) );
 
         add_filter( 'the_content',                          array( $this, 'content_filter' ) );
         add_filter( 'manage_plugins_posts_columns',         array( $this, 'custom_columns_filter' ) );
-        add_filter( 'cmb_meta_boxes',                       array( $this, 'metaboxes' ) );
-        add_filter( 'post_updated_messages',                array( $this, 'messages' ) );
-    }
-
-    /**
-     * Runs on plugin activation.
-     *
-     * @since   0.1
-     * @version 0.5
-     */
-    public function activation() {
-        flush_rewrite_rules();
-    }
-
-    /**
-     * Runs on plugin deactivation.
-     *
-     * @since   0.1
-     * @version 0.2
-     */
-    public function deactivation() {
-        flush_rewrite_rules();
-    }
-
-    /**
-     * Set our plugin defaults for post type and metabox registration
-     *
-     * @since   0.5
-     * @return  array $defaults
-     */
-    public function defaults() {
-        $defaults = array(
-            'post_type' => array(
-                'slug' => 'plugins',
-                'args' => array(
-                    'labels' => array(
-                        'name'                  => __( 'Plugins',                       'acpl' ),
-                        'singular_name'         => __( 'Plugin',                        'acpl' ),
-                        'add_new_item'          => __( 'Add New Plugin',                'acpl' ),
-                        'edit_item'             => __( 'Edit Plugin',                   'acpl' ),
-                        'new_item'              => __( 'New Plugin',                    'acpl' ),
-                        'view_item'             => __( 'View Plugin',                   'acpl' ),
-                        'search_items'          => __( 'Search Plugins',                'acpl' ),
-                        'not_found'             => __( 'No plugins found',              'acpl' ),
-                        'not_found_in_trash'    => __( 'No plugins found in the trash', 'acpl' )
-                    ),
-                    'public'            => true,
-                    'query_var'         => true,
-                    'menu_position'     => 100,
-                    'menu_icon'         => 'dashicons-admin-plugins',
-                    'has_archive'       => true,
-                    'supports'          => array( 'title', 'thumbnail', 'excerpt' ),
-                    'rewrite'           => array( 'with_front' => false )
-                )
-            )
-        );
-
-        return apply_filters( 'arconix_plugins_defaults', $defaults );
     }
 
     /**
@@ -132,17 +68,6 @@ class Arconix_Plugins_Admin {
             register_widget( $widget );
         }
 
-    }
-
-    /**
-     * Register the 'Plugin' post type.
-     *
-     * @since   0.1
-     * @version 0.5
-     */
-    public function content_types() {
-        $defaults = $this->defaults();
-        register_post_type( $defaults['post_type']['slug'], $defaults['post_type']['args'] );
     }
 
     /**
@@ -186,7 +111,7 @@ class Arconix_Plugins_Admin {
                 $details = $p->get_wporg_custom_plugin_data( $slug );
 
                 if ( ! $details ) {
-                    __e( 'No Plugin data returned', 'acpl' );
+                    _e( 'No Plugin data returned', 'acpl' );
                     break;
                 }
 
@@ -293,81 +218,6 @@ class Arconix_Plugins_Admin {
     }
 
     /**
-     * Create our custom meta box for the plugin post type
-     *
-     * @since   0.1
-     * @version 0.5
-     * @param   array $meta_boxes   Existing meta box array
-     * @return  array $meta_boxes   Meta box array including our meta box
-     */
-    public function metaboxes( $meta_boxes ) {
-        $prefix = "_acpl_";
-
-        $metabox = apply_filters( 'arconix_plugins_metabox_defaults', array(
-            'id'            => 'plugins_box',
-            'title'         => 'Plugin Details',
-            'pages'         => array( 'plugins' ), // post type
-            'context'       => 'normal',
-            'priority'      => 'high',
-            'show_names'    => true, // Show field names left of input
-            'fields'        => array(
-                array(
-                    'name'  => 'Slug',
-                    'desc'  => 'Enter the plugin slug',
-                    'id'    => $prefix . 'slug',
-                    'type'  => 'text_medium',
-                ),
-                array(
-                    'name'  => 'Demo',
-                    'desc'  => 'Enter the demo URL',
-                    'id'    => $prefix . 'demo',
-                    'type'  => 'text_medium',
-                ),
-                array(
-                    'name'  => 'Donation',
-                    'desc'  => 'Enter the donation URL',
-                    'id'    => $prefix . 'donation',
-                    'type'  => 'text_medium',
-                ),
-                array(
-                    'name'  => 'Download',
-                    'desc'  => 'Enter the download URL',
-                    'id'    => $prefix . 'download',
-                    'type'  => 'text_medium',
-                ),
-                array(
-                    'name'  => 'Documentation',
-                    'desc'  => 'Enter the documentation URL',
-                    'id'    => $prefix . 'docs',
-                    'type'  => 'text_medium',
-                ),
-                array(
-                    'name'  => 'Support',
-                    'desc'  => 'Enter the support URL.',
-                    'id'    => $prefix . 'help',
-                    'type'  => 'text_medium',
-                ),
-                array(
-                    'name'  => 'Development',
-                    'desc'  => 'Enter the development board URL',
-                    'id'    => $prefix . 'dev',
-                    'type'  => 'text_medium',
-                ),
-                array(
-                    'name'  => 'Source Code',
-                    'desc'  => 'Enter the source code URL',
-                    'id'    => $prefix . 'source',
-                    'type'  => 'text_medium',
-                )
-            )
-        ) );
-
-        $meta_boxes[] = $metabox;
-
-        return $meta_boxes;
-    }
-
-    /**
      * Load the necessary css, which can be overriden by creating your own file and placing it in
      * the root of your theme's folder
      *
@@ -375,13 +225,14 @@ class Arconix_Plugins_Admin {
      * @version 1.0.0
      */
     public function scripts() {
-        if( apply_filters( 'pre_register_arconix_plugins_css', true ) ) {
+
+        if ( ! current_theme_supports( 'arconix_plugins' ) && apply_filters( 'pre_register_arconix_plugins_css', true ) ) {
             if( file_exists( get_stylesheet_directory() . '/arconix-plugins.css' ) )
-                wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, $this->version );
+                wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins::VERSION );
             elseif( file_exists( get_template_directory() . '/arconix-plugins.css' ) )
-                wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, $this->version );
+                wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins::VERSION );
             else
-                wp_enqueue_style( 'arconix-plugins', $this->url . 'css/arconix-plugins.css', false, $this->version );
+                wp_enqueue_style( 'arconix-plugins', $this->url . 'css/arconix-plugins.css', false, Arconix_Plugins::VERSION );
         }
     }
 
@@ -392,52 +243,7 @@ class Arconix_Plugins_Admin {
      * @version 1.0.0
      */
     public function admin_css() {
-        wp_enqueue_style( 'arconix-plugins-admin', $this->url . 'css/admin.css', false, $this->version );
+        wp_enqueue_style( 'arconix-plugins-admin', $this->url . 'css/admin.css', false, Arconix_Plugins::VERSION );
     }
 
-    /**
-     * Add the Post type to the "At a Glance" Dashboard Widget.
-     *
-     * @since   0.1
-     * @version 1.0.0
-     */
-    public function at_a_glance() {
-        require_once( $this->dir . 'class-gamajo-dashboard-glancer.php' );
-        $glancer = new Gamajo_Dashboard_Glancer;
-        $glancer->add( 'plugins' );
-    }
-
-    /**
-     * Updated Messages to display on Post Type Edit screen
-     *
-     * @since   0.1
-     * @version 1.0.0
-     * @global  object  $post
-     * @global  int     $post_ID    ID of current post
-     * @param   array   $messages   existing messages to update
-     * @return  array               updated messages
-     */
-    public function messages( $messages ) {
-        global $post, $post_ID;
-        $post_type = get_post_type( $post_ID );
-
-        $obj = get_post_type_object( $post_type );
-        $singular = $obj->labels->singular_name;
-
-        $messages[$post_type] = array(
-            0  => '', // Unused. Messages start at index 1.
-            1  => sprintf( __( $singular . ' updated. <a href="%s">View ' . strtolower( $singular ) . '</a>' ), esc_url( get_permalink( $post_ID ) ) ),
-            2  => __( 'Custom field updated.' ),
-            3  => __( 'Custom field deleted.' ),
-            4  => __( $singular . ' updated.' ),
-            5  => isset( $_GET['revision'] ) ? sprintf( __( $singular . ' restored to revision from %s' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false,
-            6  => sprintf( __( $singular . ' published. <a href="%s">View ' . strtolower( $singular ) . '</a>' ), esc_url( get_permalink( $post_ID ) ) ),
-            7  => __( 'Page saved.' ),
-            8  => sprintf( __( $singular . ' submitted. <a target="_blank" href="%s">Preview ' . strtolower( $singular ) . '</a>' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-            9  => sprintf( __( $singular . ' scheduled for: <strong>%1$s</strong>. <a target="_blank" href="%2$s">Preview ' . strtolower( $singular ) . '</a>' ), date_i18n( __( 'M j, Y @ G:i' ), strtotime( $post->post_date ) ), esc_url( get_permalink( $post_ID ) ) ),
-            10 => sprintf( __( $singular . ' draft updated. <a target="_blank" href="%s">Preview ' . strtolower( $singular ) . '</a>' ), esc_url( add_query_arg( 'preview', 'true', get_permalink( $post_ID ) ) ) ),
-        );
-
-        return $messages;
-    }
 }

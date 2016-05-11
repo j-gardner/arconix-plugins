@@ -36,15 +36,6 @@ class Arconix_Plugins {
     const VERSION = '1.0.1';
 
     /**
-     * The directory path to this plugin's 'includes' folder.
-     *
-     * @since   1.0.0
-     * @access  private
-     * @var     string      $inc    The directory path to this plugin's 'includes' folder
-     */
-    private $inc;
-
-    /**
      * Initialize the class and set its properties.
      *
      * @since   1.0.0
@@ -63,6 +54,7 @@ class Arconix_Plugins {
     public function load_classes() {
         new Arconix_Plugins_Admin();
         new Arconix_Plugins_Content_Type();
+        new Arconix_Plugins_Metaboxes();
     }
 
     /**

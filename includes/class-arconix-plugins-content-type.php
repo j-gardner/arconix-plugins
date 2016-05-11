@@ -2,14 +2,14 @@
 /**
  * Defines and handles the Staff Custom Post Type
  *
- * @since   0.1.0
+ * @since   0.5.0
  */
-class Arconix_Staff_Content_Type {
+class Arconix_Plugins_Content_Type {
 
     /**
      * Initialize the class and set its properties.
      *
-     * @since   0.1.0
+     * @since   0.5.0
      * @access  public
      */
     public function __construct() {
@@ -21,13 +21,12 @@ class Arconix_Staff_Content_Type {
     /**
      * Register the post_type
      *
-     * @since   0.1.0
+     * @since   0.5.0
      * @return  void
      */
     public function content_types() {
         $defaults = $this->defaults();
         register_post_type( $defaults['post_type']['slug'], $defaults['post_type']['args'] );
-        register_taxonomy( $defaults['taxonomy']['slug'], $defaults['post_type']['slug'],  $defaults['taxonomy']['args'] );
     }
 
     /**
@@ -39,61 +38,30 @@ class Arconix_Staff_Content_Type {
     public function defaults() {
         $defaults = array(
             'post_type' => array(
-                'slug' => 'staff',
+                'slug' => 'plugins',
                 'args' => array(
                     'labels' => array(
-                        'name'                  => __( 'Staff',                     'arconix-staff' ),
-                        'singular_name'         => __( 'Staff',                     'arconix-staff' ),
-                        'add_new'               => __( 'Add New',                   'arconix-staff' ),
-                        'add_new_item'          => __( 'Add New Staff Member',      'arconix-staff' ),
-                        'edit_item'             => __( 'Edit Staff Member',         'arconix-staff' ),
-                        'new_item'              => __( 'New Staff Member',          'arconix-staff' ),
-                        'view_item'             => __( 'View Staff Member',         'arconix-staff' ),
-                        'search_items'          => __( 'Search Staff',              'arconix-staff' ),
-                        'all_items'             => __( 'All Staff',                 'arconix-staff' ),
-                        'not_found'             => __( 'No staff found',            'arconix-staff' ),
-                        'not_found_in_trash'    => __( 'No staff found in trash',   'arconix-staff' )
+                        'name'                  => __( 'Plugins',                       'arconix-plugins' ),
+                        'singular_name'         => __( 'Plugin',                        'arconix-plugins' ),
+                        'add_new_item'          => __( 'Add New Plugin',                'arconix-plugins' ),
+                        'edit_item'             => __( 'Edit Plugin',                   'arconix-plugins' ),
+                        'new_item'              => __( 'New Plugin',                    'arconix-plugins' ),
+                        'view_item'             => __( 'View Plugin',                   'arconix-plugins' ),
+                        'search_items'          => __( 'Search Plugins',                'arconix-plugins' ),
+                        'not_found'             => __( 'No plugins found',              'arconix-plugins' ),
+                        'not_found_in_trash'    => __( 'No plugins found in the trash', 'arconix-plugins' )
                     ),
                     'public'            => true,
-                    'menu_position'     => 20,
-                    'menu_icon'         => 'dashicons-groups',
+                    'query_var'         => true,
+                    'menu_position'     => 100,
                     'has_archive'       => true,
-                    'supports'          => array( 'title', 'editor', 'thumbnail', 'genesis-layouts', 'genesis-seo' ),
-                    'taxonomies'        => array( 'staff_group' ),
-                    'rewrite'           => array( 'slug' => 'sermons' )
-                )
-            ),
-            'taxonomy' => array(
-                'slug' => 'staff_group',
-                'args' => array(
-                    'labels' => array(
-                        'name'                          => __( 'Groups',                            'arconix-staff' ),
-                        'singular_name'                 => __( 'Group',                             'arconix-staff' ),
-                        'search_items'                  => __( 'Search Groups',                     'arconix-staff' ),
-                        'popular_items'                 => __( 'Popular Groups',                    'arconix-staff' ),
-                        'all_items'                     => __( 'All Groups',                        'arconix-staff' ),
-                        'parent_item'                   => null,
-                        'parent_item_colon'             => null,
-                        'edit_item'                     => __( 'Edit Group' ,                       'arconix-staff' ),
-                        'update_item'                   => __( 'Update Group',                      'arconix-staff' ),
-                        'add_new_item'                  => __( 'Add New Group',                     'arconix-staff' ),
-                        'new_item_name'                 => __( 'New Group',                         'arconix-staff' ),
-                        'separate_items_with_commas'    => __( 'Separate groups with commas',       'arconix-staff' ),
-                        'add_or_remove_items'           => __( 'Add or remove group',               'arconix-staff' ),
-                        'choose_from_most_used'         => __( 'Choose from the most used groups',  'arconix-staff' ),
-                        'menu_name'                     => __( 'Groups',                            'arconix-staff' ),
-                    ),
-                    'hierarchical'              => false,
-                    'show_ui'                   => true,
-                    'show_admin_column'         => true,
-                    'update_count_callback'     => '_update_post_term_count',
-                    'query_var'                 => true,
-                    'rewrite'                   => array( 'slug' => 'staff' )
+                    'supports'          => array( 'title', 'thumbnail', 'excerpt' ),
+                    'rewrite'           => array( 'with_front' => false )
                 )
             )
         );
 
-        return apply_filters( 'arconix_staff_defaults', $defaults );
+        return apply_filters( 'arconix_plugins_defaults', $defaults );
     }
 
     /**
@@ -136,7 +104,7 @@ class Arconix_Staff_Content_Type {
      */
     public function at_a_glance() {
         $glancer = new Gamajo_Dashboard_Glancer;
-        $glancer->add( 'staff' );
+        $glancer->add( 'plugins' );
     }
 
 }

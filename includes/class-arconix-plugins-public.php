@@ -1,4 +1,7 @@
 <?php
+/*
+if ( ! function_exists( 'plugins_api' ) )
+    require_once( ABSPATH . 'wp-admin/includes/plugin-install.php' );*/
 /**
  * Provides Helper functions for displaying plugin information
  *
@@ -24,7 +27,8 @@ class Arconix_Plugin {
         $trans_slug = 'acpl-' . $slug;
 
         // Check for stored transient. Create one if none exists
-        if( false === get_transient( $trans_slug ) ) {
+        if( WP_DEBUG || false === get_transient( $trans_slug ) ) {
+
             $request = array(
                 'action' => 'plugin_information',
                 'request' => serialize(
@@ -35,10 +39,11 @@ class Arconix_Plugin {
                 )
             );
 
-            $repo = wp_remote_post( 'http://api.wordpress.org/plugins/info/1.0/', array( 'body' => $request ) );
-            $response = $repo['body'];
 
-            $expiration = apply_filters( 'arconix_plugins_transient_expiration', 86400 );
+            $wp_repo = wp_remote_post( 'http://api.wordpress.org/plugins/info/1.0/', array( 'body' => $request ) );
+            $response = unserialize( $response['body'] );
+
+            $expiration = apply_filters( 'arconix_plugins_transient_expiration', 60*60*24 );
 
             // Save transient to the database
             set_transient( $trans_slug, $response, $expiration );
@@ -48,11 +53,16 @@ class Arconix_Plugin {
         $response = get_transient( $trans_slug );
 
         if( ! is_wp_error( $response ) )
-            $plugin = $response;
-        else
-            echo "A transient error occured with {$slug}!";
+            return false;
 
         return unserialize( $plugin );
+
+        /*$api_call = plugins_api( 'plugin_information', array( 'slug' => $slug ) );
+
+        if( is_wp_error( $api_call ) )
+            return print_r( $api_call->get_error_message(), true );
+        else
+            return $api_call;*/
     }
 
     /**
@@ -148,8 +158,8 @@ class Arconix_Plugin {
      * @param   int     $id
      * @return  string          Slug of plugin meta information
      */
-    public function get_slug( $id ) {
-        if ( ! isset( $id ) )
+    public function get_slug( $id = 0 ) {
+        if ( $id === 0 )
             $id = get_the_id();
 
         $slug = get_post_meta( $id, '_acpl_slug', true );
