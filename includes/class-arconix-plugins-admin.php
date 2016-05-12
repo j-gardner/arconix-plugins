@@ -50,9 +50,9 @@ class Arconix_Plugins_Admin {
         add_action( 'manage_plugins_posts_custom_column',   array( $this, 'custom_columns_action' ) );
         add_action( 'admin_enqueue_scripts',                array( $this, 'admin_css' ) );
         add_action( 'wp_enqueue_scripts',                   array( $this, 'scripts' ) );
-        //add_action( 'widgets_init',                         array( $this, 'plugin_widgets' ) );
+        add_action( 'widgets_init',                         array( $this, 'plugin_widgets' ) );
 
-        add_filter( 'the_content',                          array( $this, 'content_filter' ) );
+        //add_filter( 'the_content',                          array( $this, 'content_filter' ) );
         add_filter( 'manage_plugins_posts_columns',         array( $this, 'custom_columns_filter' ) );
     }
 
@@ -117,7 +117,9 @@ class Arconix_Plugins_Admin {
 
                 echo 'Latest Version: ' . $p->get_version( $details ) . '<br />';
                 echo 'Last Updated: ' . $p->get_last_updated( $details ) . ' <em style="color: #aaa;">(' . $p->ago( strtotime( $details->last_updated ) ) . ')</em><br />';
-                echo 'Downloads: ' . $p->get_downloads( $details );
+                echo 'Active Installs: ' . $p->get_active_installs( $details ) . '<br />';
+                echo 'Downloads: ' . $p->get_downloads( $details ) . '<br />';
+                echo 'Rating: ' . $p->get_rating( $details );
 
                 break;
         }

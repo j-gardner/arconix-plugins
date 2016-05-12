@@ -10,9 +10,9 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
     function __construct() {
         $widget_ops = array(
             'classname'     => 'widget_plugin_details',
-            'description'   => __( 'Display additional details about the WP.org hosted plugin', 'acpl' ),
+            'description'   => __( 'Display additional details about the WP.org hosted plugin', 'arconix-plugins' ),
         );
-        parent::__construct( 'arconix-plugins-details', __( 'Arconix Plugin Details', 'acpl' ), $widget_ops );
+        parent::__construct( 'arconix-plugins-details', __( 'Arconix Plugin Details', 'arconix-plugins' ), $widget_ops );
     }
 
     /**
@@ -33,7 +33,7 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         // Before widget (defined by themes)
         echo $before_widget;
 
-        $p = new Arconix_Plugins();
+        $p = new Arconix_Plugin();
 
         $slug = $p->get_slug();
 
@@ -49,15 +49,14 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         // Set our variables
         $plugname   = $details->name;
         $plugtitle  = $plugname . ' Details';
-        $version    = $details->version;
-        $requires   = $details->requires;
+        $version    = $p->get_version( $details );
         $compatible = $details->tested;
-        $updated    = $p->get_last_updated();
         $ago        = $p->ago( strtotime( $details->last_updated ) );
-        $downloads  = $p->get_downloads();
+        $downloads  = $p->get_downloads( $details );
         $downlink   = $details->download_link;
+        $rating     = $p->get_rating( $details );
         $demolink   = esc_url( $custom["_acpl_demo"][0] );
-        $donatlink  = esc_url( $custom["_acpl_donate"][0] );
+        $donatelink  = esc_url( $custom["_acpl_donate"][0] );
 
 
         echo $before_title . $plugtitle . $after_title;
@@ -65,17 +64,17 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         echo "<table class='arconix-plugins-table arconix-plugins-table-details'><tbody>";
         echo "<tr><td>Version</td><td>{$version}</td></tr>";
         echo "<tr><td>Requires</td><td>{$requires}</td></tr>";
-        echo "<tr><td>Compatible</td><td>{$compatible}</td></tr>";
-        //echo "<tr><td>Last Updated</td><td>{$updated} <span class='arconix-plugins-ago'>{$ago}</span></td></tr>";
+        echo "<tr><td>Tested to</td><td>{$compatible}</td></tr>";
         echo "<tr><td>Last Updated</td><td><span class='arconix-plugins-ago'>{$ago}</span></td></tr>";
         echo "<tr><td>Downloads</td><td>{$downloads}</td></tr>";
+        echo "<tr><td>Rating</td><td>{$rating}</td></tr>";
         echo "</tbody></table>";
         echo "<p class='arconix-plugins-button-area'>";
         echo "<a class='arconix-button arconix-button-large arconix-button-green arconix-button-download' href='{$downlink}'>Download</a>";
         if( $demolink )
             echo "<a class='arconix-button arconix-button-large arconix-button-silver arconix-button-demo' href='{$demolink}'>Demo</a>";
-        if( $donatlink )
-            echo "Enjoy this plugin? Please consider <a class='arconix-button-donate' href='{$donatlink}'>buying me a coffee</a>";
+        if( $donatelink )
+            echo "Enjoy this plugin? Please consider <a class='arconix-button-donate' href='{$donatelink}'>buying me a coffee</a>";
         echo "</p>";
 
         // After widget (defined by themes)
@@ -116,9 +115,9 @@ class Arconix_Widget_Plugin_Resources extends WP_Widget {
     function __construct() {
         $widget_ops = array(
             'classname'     => 'widget_plugin_resources',
-            'description'   => __( 'Resources for the plugin', 'acpl' ),
+            'description'   => __( 'Resources for the plugin', 'arconix-plugins' ),
         );
-        parent::__construct( 'arconix-plugins-resource', __( 'Arconix Plugin Resources', 'acpl' ), $widget_ops );
+        parent::__construct( 'arconix-plugins-resource', __( 'Arconix Plugin Resources', 'arconix-plugins' ), $widget_ops );
     }
 
     /**
@@ -134,7 +133,7 @@ class Arconix_Widget_Plugin_Resources extends WP_Widget {
         // Bail if not a single-plugin
         if( ! is_singular( 'plugins' ) ) return;
 
-        $p = new Arconix_Plugins();
+        $p = new Arconix_Plugin();
 
         $slug = $p->get_slug();
         // Bail if $slug has no value (useful if plugin is not being hosted on WP.org or isn't live yet)
@@ -164,10 +163,14 @@ class Arconix_Widget_Plugin_Resources extends WP_Widget {
 
         // Now return the rest of the plugin resources (docs, help, etc...)
         echo '<ul class="arconix-plugin-resources">';
-        echo "<li><a class='arconix-plugin-docs' href='{$docs}'>Documentation</a></li>";
-        echo "<li><a class='arconix-plugin-help' href='{$help}'>Support</a></li>";
-        echo "<li><a class='arconix-plugin-dev' href='{$dev}'>Dev Board</a></li>";
-        echo "<li><a class='arconix-plugin-source' href='{$source}'>Source Code</a></li>";
+        if ( $docs )
+            echo "<li><a class='arconix-plugin-docs' href='{$docs}'>Documentation</a></li>";
+        if ( $help )
+            echo "<li><a class='arconix-plugin-help' href='{$help}'>Support</a></li>";
+        if ( $dev )
+            echo "<li><a class='arconix-plugin-dev' href='{$dev}'>Dev Roadmap</a></li>";
+        if ( $source )
+            echo "<li><a class='arconix-plugin-source' href='{$source}'>Source Code</a></li>";
         echo '</ul>';
 
         // After widget (defined by themes)
@@ -207,9 +210,9 @@ class Arconix_Widget_Plugin_Related extends WP_Widget {
     function __construct() {
         $widget_ops = array(
             'classname'     => 'widget_plugin_related',
-            'description'   => __( 'Recent Posts tagged with the plugin slug', 'acpl' ),
+            'description'   => __( 'Recent Posts tagged with the plugin slug', 'arconix-plugins' ),
         );
-        parent::__construct( 'arconix-plugins-related', __( 'Arconix Plugin Related Posts', 'acpl' ), $widget_ops );
+        parent::__construct( 'arconix-plugins-related', __( 'Arconix Plugin Related Posts', 'arconix-plugins' ), $widget_ops );
     }
 
     /**
