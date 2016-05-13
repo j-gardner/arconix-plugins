@@ -56,7 +56,7 @@ class Arconix_Widget_Plugin_Details extends WP_Widget {
         $downlink   = $details->download_link;
         $rating     = $p->get_rating( $details );
         $demolink   = esc_url( $custom["_acpl_demo"][0] );
-        $donatelink  = esc_url( $custom["_acpl_donate"][0] );
+        $donatelink  = esc_url( $custom["_acpl_donation"][0] );
 
 
         echo $before_title . $plugtitle . $after_title;

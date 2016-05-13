@@ -4,7 +4,7 @@
  * Plugin URI: http://arconixpc.com/
  * Description: Plugin for displaying WP.org-hosted plugins on your website
  *
- * Version: 1.0.1
+ * Version: 1.0.0
  *
  * Author: John Gardner
  * Author URI: http://arconixpc.com
@@ -18,13 +18,16 @@ require_once( plugin_dir_path(__FILE__) . 'includes/class-arconix-plugins-admin.
 require_once( plugin_dir_path(__FILE__) . 'includes/class-arconix-plugins-content-type.php' );
 require_once( plugin_dir_path(__FILE__) . 'includes/class-arconix-plugins-metaboxes.php' );
 require_once( plugin_dir_path(__FILE__) . 'includes/class-arconix-plugins-public.php' );
+require_once( plugin_dir_path(__FILE__) . 'includes/class-arconix-plugins-widgets.php' );
 require_once( plugin_dir_path(__FILE__) . 'includes/cmb2/init.php' );
 if( ! class_exists('Gamajo_Dashboard_Glancer') )
     require_once( plugin_dir_path(__FILE__) . 'includes/class-gamajo-dashboard-glancer.php' );
 
 
-
-class Arconix_Plugins {
+/**
+ * Base Class to initialize the plugin
+ */
+class Arconix_Plugins_Plugin {
 
     /**
      * Stores the current version of the plugin.
@@ -33,7 +36,7 @@ class Arconix_Plugins {
      * @access  private
      * @var     string  $version    Current plugin version
      */
-    const VERSION = '1.0.1';
+    const VERSION = '1.0.0';
 
     /**
      * Initialize the class and set its properties.
@@ -60,7 +63,7 @@ class Arconix_Plugins {
     /**
      * Activate the plugin
      *
-     * @since   1.0.1
+     * @since   1.0.0
      * return   void
      */
     public function activate() {
@@ -70,7 +73,7 @@ class Arconix_Plugins {
     /**
      * Deactivate the plugin
      *
-     * @since   1.0.1
+     * @since   1.0.0
      * @return  void
      */
     public function deactivate() {
@@ -84,5 +87,5 @@ class Arconix_Plugins {
 //
 add_action( 'plugins_loaded', 'arconix_plugins_run' );
 function arconix_plugins_run() {
-    new Arconix_Plugins();
+    new Arconix_Plugins_Plugin();
 }

@@ -2,9 +2,9 @@
 Contributors: jgardner03
 Donate link: http://arcnx.co/acpldonation
 Tags: arconix, plugins
-Requires at least: 3.4
-Tested up to: 3.5.1
-Stable tag: 1.0
+Requires at least: 4.3
+Tested up to: 4.5
+Stable tag: 1.0.0
 
 Made for WordPress plugin developers, this plugin will help you display your WP.org hosted plugins on your website by accessing the WP.org plugin API.
 

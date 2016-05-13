@@ -16,15 +16,15 @@ class Arconix_Plugin {
      * overridden by filter.
      *
      * @since   0.5
-     * @version 1.0.1
+     * @version 1.0.0
      * @param   string      $slug          Plugin slug
-     * @return  stdObj                     Standard Object
+     * @return  stdObj                     Details of the Plugin being asked about
      */
     public function get_wporg_custom_plugin_data( $slug ) {
         $transient_slug = 'acpl-' . $slug;
 
         // Check for stored transient. Create one if none exists
-        if ( WP_DEBUG || false === get_transient( $transient_slug ) ) {
+        if ( false === get_transient( $transient_slug ) ) {
 
             $request = array(
                 'action'    => 'plugin_information',
@@ -39,7 +39,7 @@ class Arconix_Plugin {
                 )
             );
 
-            // Pass the request to the API and then prep the response
+            // Pass the request to the API and then unserialize the response
             $api_request = wp_remote_post( 'http://api.wordpress.org/plugins/info/1.0/', array( 'body' => $request ) );
             $response = unserialize( $api_request['body'] );
 
@@ -111,7 +111,7 @@ class Arconix_Plugin {
     /**
      * Return the plugin rating on a 5-star scale
      *
-     * @since   1.0.1
+     * @since   1.0.0
      * @param   stdObj      $data           Plugin information
      * @param   bool        $five_scale     Format number to a X/5 rating like WP.org
      * @return  float
@@ -129,7 +129,7 @@ class Arconix_Plugin {
     /**
      * Return the number of active installs
      *
-     * @since   1.0.1
+     * @since   1.0.0
      * @param   stdObj      $data           Plugin information
      * @param   bool        $formatted      Return raw or formatted data
      * @return  string                      Number of active installs formatted

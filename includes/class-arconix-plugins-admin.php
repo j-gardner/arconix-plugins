@@ -11,7 +11,7 @@ class Arconix_Plugins_Admin {
      *
      * @since   1.0.0
      * @access  private
-     * @var     string      $dir    The directory path to this plugin
+     * @var     string      $dir            The directory path to this plugin
      */
     private $dir;
 
@@ -20,7 +20,7 @@ class Arconix_Plugins_Admin {
      *
      * @since   1.0.0
      * @access  private
-     * @var     string      $url    The url path to this plugin
+     * @var     string      $url            The url path to this plugin
      */
     private $url;
 
@@ -30,7 +30,7 @@ class Arconix_Plugins_Admin {
      * @since   0.1
      * @version 1.0.0
      * @access  private
-     * @param   string      $version    The version of this plugin.
+     * @param   string      $version        The version of this plugin.
      */
     public function __construct() {
         $this->dir = trailingslashit( plugin_dir_path( __FILE__ ) );
@@ -44,22 +44,23 @@ class Arconix_Plugins_Admin {
      *
      * Loads all actions and filters to be used.
      *
-     * @since   1.0.1
+     * @since   1.0.0
      */
     public function init() {
         add_action( 'manage_plugins_posts_custom_column',   array( $this, 'custom_columns_action' ) );
         add_action( 'admin_enqueue_scripts',                array( $this, 'admin_css' ) );
         add_action( 'wp_enqueue_scripts',                   array( $this, 'scripts' ) );
         add_action( 'widgets_init',                         array( $this, 'plugin_widgets' ) );
-
-        //add_filter( 'the_content',                          array( $this, 'content_filter' ) );
+        add_action( 'pre_get_posts',                        array( $this, 'admin_sorting' ) );
+        add_action( 'dashboard_glance_items',               array( $this, 'at_a_glance' ) );
+        add_filter( 'the_content',                          array( $this, 'content_filter' ) );
         add_filter( 'manage_plugins_posts_columns',         array( $this, 'custom_columns_filter' ) );
     }
 
     /**
      * Register the plugin widget(s)
      *
-     * @since 0.5
+     * @since   0.5
      */
     public function plugin_widgets() {
         $widgets = array( 'Arconix_Widget_Plugin_Details', 'Arconix_Widget_Plugin_Resources', 'Arconix_Widget_Plugin_Related' );
@@ -67,7 +68,6 @@ class Arconix_Plugins_Admin {
         foreach ( $widgets as $widget ) {
             register_widget( $widget );
         }
-
     }
 
     /**
@@ -75,14 +75,14 @@ class Arconix_Plugins_Admin {
      *
      * @since   0.1
      * @version 0.5
-     * @param   array $columns  Existing post_type columns
-     * @return  array $columns  New post_type columns
+     * @param   array       $columns        Existing post_type columns
+     * @return  array       $columns        New post_type columns
      */
     public function custom_columns_filter( $columns ) {
         $columns = array(
             'cb'                => '<input type="checkbox" />',
-            'title'             => __( 'Title', 'acpl' ),
-            'plugins_details'   => __( 'Details', 'acpl' )
+            'title'             => __( 'Title', 'arconix-plugins' ),
+            'plugins_details'   => __( 'Details', 'arconix-plugins' )
         );
 
         return $columns;
@@ -93,14 +93,14 @@ class Arconix_Plugins_Admin {
      *
      * @since   0.1
      * @version 0.5
-     * @param   array   $column Column whose output is being defined
+     * @param   array       $column         Column whose output is being defined
      */
     public function custom_columns_action( $column ) {
 
-        $p = new Arconix_Plugin();
-
         switch( $column ) {
             case 'plugins_details':
+                $p = new Arconix_Plugin();
+
                 // Get the slug set by the custom post type entry
                 $slug = $p->get_slug();
 
@@ -111,7 +111,7 @@ class Arconix_Plugins_Admin {
                 $details = $p->get_wporg_custom_plugin_data( $slug );
 
                 if ( ! $details ) {
-                    _e( 'No Plugin data returned', 'acpl' );
+                    _e( 'No Plugin data returned', 'arconix-plugins' );
                     break;
                 }
 
@@ -126,12 +126,29 @@ class Arconix_Plugins_Admin {
     }
 
     /**
+     * Change the default sort with this Post Type
+     *
+     * @since   1.0.0
+     * @param   stdObj      $query          Incoming Query to modify
+     * @return  void
+     */
+    public function admin_sorting( $query ) {
+        if( ! is_admin() && ! $query->is_main_query() && 'plugins' != $query->get( 'post_type' ) )
+            // nothing to do so let's bail
+            return;
+
+        $query->set( 'orderby', 'title' );
+        $query->set( 'order', 'ASC' );
+
+    }
+
+    /**
      * Add our plugin data to the content
      *
      * @since   0.3
      * @version 0.5
-     * @param   string  $content
-     * @return  string  $content    Modified post content
+     * @param   string      $content
+     * @return  string      $content        Modified post content
      */
     public function content_filter( $content ) {
         global $post;
@@ -230,11 +247,11 @@ class Arconix_Plugins_Admin {
 
         if ( ! current_theme_supports( 'arconix_plugins' ) && apply_filters( 'pre_register_arconix_plugins_css', true ) ) {
             if( file_exists( get_stylesheet_directory() . '/arconix-plugins.css' ) )
-                wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins::VERSION );
+                wp_enqueue_style( 'arconix-plugins', get_stylesheet_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins_Plugin::VERSION );
             elseif( file_exists( get_template_directory() . '/arconix-plugins.css' ) )
-                wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins::VERSION );
+                wp_enqueue_style( 'arconix-plugins', get_template_directory_uri() . '/arconix-plugins.css', false, Arconix_Plugins_Plugin::VERSION );
             else
-                wp_enqueue_style( 'arconix-plugins', $this->url . 'css/arconix-plugins.css', false, Arconix_Plugins::VERSION );
+                wp_enqueue_style( 'arconix-plugins', $this->url . 'css/arconix-plugins.css', false, Arconix_Plugins_Plugin::VERSION );
         }
     }
 
@@ -245,7 +262,17 @@ class Arconix_Plugins_Admin {
      * @version 1.0.0
      */
     public function admin_css() {
-        wp_enqueue_style( 'arconix-plugins-admin', $this->url . 'css/admin.css', false, Arconix_Plugins::VERSION );
+        wp_enqueue_style( 'arconix-plugins-admin', $this->url . 'css/admin.css', false, Arconix_Plugins_Plugin::VERSION );
+    }
+
+    /**
+     * Add the post type to the WP "At a Glance" dashboard
+     *
+     * @since   0.1.0
+     */
+    public function at_a_glance() {
+        $glancer = new Gamajo_Dashboard_Glancer;
+        $glancer->add( 'plugins' );
     }
 
 }

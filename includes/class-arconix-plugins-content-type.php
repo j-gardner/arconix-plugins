@@ -14,7 +14,6 @@ class Arconix_Plugins_Content_Type {
      */
     public function __construct() {
         add_action( 'init',                         array( $this, 'content_types' ) );
-        add_action( 'dashboard_glance_items',       array( $this, 'at_a_glance' ) );
         add_filter( 'post_updated_messages',        array( $this, 'updated_messages' ) );
     }
 
@@ -41,7 +40,7 @@ class Arconix_Plugins_Content_Type {
                 'slug' => 'plugins',
                 'args' => array(
                     'labels' => array(
-                        'name'                  => __( 'Plugins',                       'arconix-plugins' ),
+                        'name'                  => __( 'WP Plugins',                    'arconix-plugins' ),
                         'singular_name'         => __( 'Plugin',                        'arconix-plugins' ),
                         'add_new_item'          => __( 'Add New Plugin',                'arconix-plugins' ),
                         'edit_item'             => __( 'Edit Plugin',                   'arconix-plugins' ),
@@ -54,6 +53,7 @@ class Arconix_Plugins_Content_Type {
                     'public'            => true,
                     'query_var'         => true,
                     'menu_position'     => 100,
+                    'menu_icon'         => 'dashicons-admin-plugins',
                     'has_archive'       => true,
                     'supports'          => array( 'title', 'thumbnail', 'excerpt' ),
                     'rewrite'           => array( 'with_front' => false )
@@ -97,14 +97,6 @@ class Arconix_Plugins_Content_Type {
         return $messages;
     }
 
-    /**
-     * Add the post type to the WP "At a Glance" dashboard
-     *
-     * @since 0.1.0
-     */
-    public function at_a_glance() {
-        $glancer = new Gamajo_Dashboard_Glancer;
-        $glancer->add( 'plugins' );
-    }
+
 
 }
